@@ -19,7 +19,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>Full</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NDESK_OPTIONS</DefineConstants>
@@ -237,6 +237,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="GitSharp.Core\sample\README" />
     <None Include="GitSharp.Core\sample\unpacked" />
+    <Compile Include="GitSharp\StashTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\all_packed_objects.txt">
