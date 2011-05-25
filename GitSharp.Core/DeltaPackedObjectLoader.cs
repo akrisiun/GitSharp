@@ -102,6 +102,45 @@ namespace GitSharp.Core
             }
         }
 
+        public override void MaterializeNoStore(WindowCursor curs)
+        {
+            if (curs == null)
+            {
+                throw new System.ArgumentNullException("curs");
+            }
+
+            if (CachedBytes != null)
+            {
+                return;
+            }
+
+            if (Type != ObjCommit)
+            {
+                UnpackedObjectCache.Entry cache = PackFile.readCache(DataOffset);
+                if (cache != null)
+                {
+                    curs.Release();
+                    Type = cache.type;
+                    Size = cache.data.Length;
+                    return;
+                }
+            }
+
+            try
+            {
+                PackedObjectLoader baseLoader = GetBaseLoader(curs);
+                baseLoader.MaterializeNoStore(curs);
+                Size = BinaryDelta.CalcResultLength((int)baseLoader.Size, PackFile.decompress(DataOffset, _deltaSize, curs));
+                curs.Release();
+                Type = baseLoader.Type;
+            }
+            catch (IOException dfe)
+            {
+                throw new CorruptObjectException("object at " + DataOffset + " in "
+                    + PackFile.File.FullName + " has bad zlib stream", dfe);
+            }
+        }
+
     	public override long RawSize
     	{
     		get { return _deltaSize; }

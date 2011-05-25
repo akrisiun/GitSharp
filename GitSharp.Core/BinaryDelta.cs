@@ -145,5 +145,38 @@ namespace GitSharp.Core
 
 			return result;
 		}
+
+        public static int CalcResultLength(int baseDataLen, byte[] delta)
+        {
+            int deltaPtr = 0;
+
+            // Length of the base object (a variable Length int).
+            //
+            int baseLen = 0;
+            int c, shift = 0;
+            do
+            {
+                c = delta[deltaPtr++] & 0xff;
+                baseLen |= (c & 0x7f) << shift;
+                shift += 7;
+            } while ((c & 0x80) != 0);
+
+            if (baseDataLen != baseLen)
+            {
+                throw new ArgumentException("baseDataLen incorrect");
+            }
+
+            // Length of the resulting object (a variable Length int).
+            //
+            int resLen = 0;
+            shift = 0;
+            do
+            {
+                c = delta[deltaPtr++] & 0xff;
+                resLen |= (c & 0x7f) << shift;
+                shift += 7;
+            } while ((c & 0x80) != 0);
+            return resLen;
+        }
 	}
 }

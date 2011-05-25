@@ -116,6 +116,29 @@ namespace GitSharp
 			}
 		}
 
+        public long Size
+        {
+            get
+            {
+                if (_blob == null)
+                {
+                    var cursor = new GitSharp.Core.WindowCursor();
+                    try
+                    {
+                        var loaders = _repo._internal_repo.OpenObjectInAllPacks(_id, cursor);
+                        if (loaders == null || !loaders.Any())
+                            return 0;
+                        var loader = loaders.FirstOrDefault();
+                        loader.MaterializeNoStore(cursor);
+                        return loader.Size;
+                    }
+                    finally { cursor.Release(); }
+                }
+                else
+                    return _blob.Length;
+            }
+        }
+
 		public override string ToString()
 		{
 			return "Blob[" + ShortHash + "]";

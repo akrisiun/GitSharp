@@ -90,6 +90,11 @@ namespace GitSharp.Core
             }
         }
 
+        public override void MaterializeNoStore(WindowCursor curs)
+        {
+            //Do nothing
+        }
+
     	public override ObjectId DeltaBase
     	{
     		get { return null; }

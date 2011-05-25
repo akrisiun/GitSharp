@@ -139,6 +139,11 @@ namespace GitSharp
 		public byte[] RawData
 		{
 			get { return Blob.RawData; }
-		}
+        }
+
+        public long Size
+        {
+            get { return Blob.Size; }
+        }
 	}
 }
