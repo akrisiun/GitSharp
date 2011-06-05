@@ -126,7 +126,7 @@ namespace GitSharp.Core.RevWalk
         public void markStart(RevObject o)
         {
             RevTag oTag = (o as RevTag);
-            while (oTag != null)
+            if (oTag != null)
             {
                 AddObject(o);
                 o = oTag.getObject();
@@ -187,7 +187,7 @@ namespace GitSharp.Core.RevWalk
         public void markUninteresting(RevObject o)
         {
             RevTag oTag = (o as RevTag);
-            while (oTag != null)
+            if (oTag != null)
             {
                 o.Flags |= UNINTERESTING;
                 if (hasRevSort(RevSort.BOUNDARY))
