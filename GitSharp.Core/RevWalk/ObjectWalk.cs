@@ -125,11 +125,10 @@ namespace GitSharp.Core.RevWalk
         /// </exception>
         public void markStart(RevObject o)
         {
-            RevTag oTag = (o as RevTag);
-            if (oTag != null)
+            while (o is RevTag)
             {
                 AddObject(o);
-                o = oTag.getObject();
+                o = ((RevTag)o).getObject();
                 parseHeaders(o);
             }
 
@@ -186,15 +185,14 @@ namespace GitSharp.Core.RevWalk
         /// </exception>
         public void markUninteresting(RevObject o)
         {
-            RevTag oTag = (o as RevTag);
-            if (oTag != null)
+            while (o is RevTag)
             {
                 o.Flags |= UNINTERESTING;
                 if (hasRevSort(RevSort.BOUNDARY))
                 {
                     AddObject(o);
                 }
-                o = oTag.getObject();
+                o = ((RevTag)o).getObject();
                 parseHeaders(o);
             }
 
