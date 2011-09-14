@@ -268,6 +268,7 @@ namespace GitSharp.Core
 		    _stream.Write(packChecksum);
             using (var sha = new SHA1CryptoServiceProvider())
 			{
+				_stream.BaseStream.Position = 0;
 			var hash = sha.ComputeHash(_stream.BaseStream);
 #warning this should be tested better
 				_stream.Write(hash);
