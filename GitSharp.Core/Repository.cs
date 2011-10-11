@@ -229,6 +229,16 @@ namespace GitSharp.Core
         /// <param name="bare">if true, a bare repository is created.</param>
         public bool Create(bool bare)
         {
+            return Create(bare, false);
+        }
+
+        /// <summary>
+        /// Create a new Git repository initializing the necessary files and directories and receive pack option
+        /// </summary>
+        /// <param name="bare">if true, a bare repository is created.</param>
+        /// <param name="receivePack">if true, http.receivepack is set to true.</param>
+        public bool Create(bool bare, bool receivePack)
+        {
             var reinit = false;
 
             if (Config.getFile().Exists)
@@ -252,6 +262,8 @@ namespace GitSharp.Core
             Config.setBoolean("core", null, "bare", bare);
             Config.setBoolean("core", null, "logallrefupdates", !bare);
             Config.setBoolean("core", null, "autocrlf", false);
+            if (receivePack)
+                Config.setBoolean("http", null, "receivepack", true);
 
             Config.save();
 
