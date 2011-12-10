@@ -37,57 +37,29 @@
  */
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using GitSharp.Core.Transport;
 
 namespace GitSharp.Core
 {
-
-    public class SubmoduleEntry
+    public class BlobBasedSubmoduleConfig : BlobBasedConfig
     {
-		[Serializable]
-        public enum UpdateMethod
-        {
-            Checkout,
-            Rebase,
-            Merge
-        }
-
-        public string Name { get; private set; }
-        public string Path { get; private set; }
-        public URIish Url { get; private set; }
-        public string RawUrl { get; private set; }
-        public UpdateMethod Update { get; private set; }
-
-        public SubmoduleEntry(string name, string path, URIish url, UpdateMethod update)
-        {
-            Name = name;
-            Path = path;
-            Url = url;
-            RawUrl = url != null ? url.ToPrivateString() : null;
-            Update = update;
-        }
-
-        public SubmoduleEntry(string name, string path, string url, UpdateMethod update)
-        {
-            Name = name;
-            Path = path;
-            try { Url = new URIish(url); }
-            catch { }
-            RawUrl = url;
-            Update = update;
-        }
-    }
-
-    public class SubmoduleConfig : FileBasedConfig
-    {
-        public SubmoduleConfig(Config cfg, Repository db)
-            : base(cfg, new FileInfo(Path.Combine(db.WorkingDirectory.FullName, ".gitmodules")))
+        public BlobBasedSubmoduleConfig(Config cfg, Commit commit)
+            : base(cfg, commit, ".gitmodules")
         {
         }
 
-        public SubmoduleConfig(Repository db)
-            : this(null, db)
+        public BlobBasedSubmoduleConfig(Commit commit)
+            : this(null, commit)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tree">Root tree will be resolved so you can simply pass subtree</param>
+        public BlobBasedSubmoduleConfig(Tree tree)
+            : base(null, tree.Repository.OpenBlob(GetRoot(tree).FindBlobMember(".gitmodules").Id).Bytes)
         {
         }
 
@@ -102,6 +74,26 @@ namespace GitSharp.Core
         public SubmoduleEntry GetEntry(int index)
         {
             string name = getSubsections("submodule")[index];
+            return CreateEntry(name);
+        }
+
+        public IEnumerable<SubmoduleEntry> GetEntries()
+        {
+            foreach (string name in getSubsections("submodule"))
+                yield return CreateEntry(name);
+        }
+
+        static Tree GetRoot(Tree tree)
+        {
+            if (tree == null) throw new ArgumentNullException("tree");
+            Tree parentTree2 = tree;
+            while (parentTree2.Parent != null)
+                parentTree2 = parentTree2.Parent;
+            return parentTree2;
+        }
+
+        SubmoduleEntry CreateEntry(string name)
+        {
             string path = getString("submodule", name, "path");
             string url = getString("submodule", name, "url");
             string update = getString("submodule", name, "update");
@@ -124,17 +116,5 @@ namespace GitSharp.Core
 
             return new SubmoduleEntry(name, path, url, method);
         }
-
-        public void AddEntry(SubmoduleEntry entry)
-        {
-			if (entry == null)
-				throw new System.ArgumentNullException ("entry");
-			
-            setString("submodule", entry.Name, "path", entry.Path);
-            setString("submodule", entry.Name, "url", entry.Url.ToPrivateString());
-            if (entry.Update != SubmoduleEntry.UpdateMethod.Checkout)
-                setString("submodule", entry.Name, "update", entry.Update.ToString().ToLowerInvariant());
-        }
     }
-
 }

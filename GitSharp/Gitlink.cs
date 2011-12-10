@@ -35,7 +35,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System.Linq;
 using CoreGitLink = GitSharp.Core.GitLinkTreeEntry;
+using CoreSubmoduleConfig = GitSharp.Core.BlobBasedSubmoduleConfig;
 
 namespace GitSharp
 {
@@ -95,6 +97,17 @@ namespace GitSharp
         public Tree Parent
         {
             get { return new Tree(_repo, _internal_link.Parent); }
+        }
+
+        public string Url
+        {
+            get
+            {
+                var tree = _internal_link.Parent;
+                var config = new CoreSubmoduleConfig(_internal_link.Parent);
+                var entry = config.GetEntries().FirstOrDefault(a => a.Path == this.Path);
+                return entry != null && entry.Url != null ? entry.Url.Path : null;
+            }
         }
     }
 }
