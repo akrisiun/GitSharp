@@ -106,7 +106,7 @@ namespace GitSharp
                 var tree = _internal_link.Parent;
                 var config = new CoreSubmoduleConfig(_internal_link.Parent);
                 var entry = config.GetEntries().FirstOrDefault(a => a.Path == this.Path);
-                return entry != null && entry.Url != null ? entry.Url.Path : null;
+                return entry != null ? entry.RawUrl : null;
             }
         }
     }
