@@ -486,6 +486,7 @@ namespace GitSharp.Core
 				// skew the resource counters we maintain. Our canClear() check here
 				// provides a way to skip the redundant dequeues, if any.
 				//
+				if (r == null) break;
 				if (!r.canClear()) continue;
 
 				clear(r);
