@@ -1,5 +1,6 @@
 ﻿/*
  * Copyright (C) 2009-2010, Henon <meinrad.recheis@gmail.com>
+ * Copyright (C) 2011, Linquize <linquize@yahoo.com.hk>
  *
  * All rights reserved.
  *

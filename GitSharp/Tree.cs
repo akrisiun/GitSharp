@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009-2010, Henon <meinrad.recheis@gmail.com>
+ * Copyright (C) 2011, Linquize <linquize@yahoo.com.hk>
  *
  * All rights reserved.
  *
@@ -161,6 +162,14 @@ namespace GitSharp
 				return Children.Where(child => child.IsBlob).Cast<Leaf>().ToArray();
 			}
 		}
+
+        public IEnumerable<Gitlink> Submodules
+        {
+            get
+            {
+                return InternalTree.Members.OfType<GitLinkTreeEntry>().Select(a => new Gitlink(_repo, a)).ToArray();
+            }
+        }
 
 		public override string Path
 		{
