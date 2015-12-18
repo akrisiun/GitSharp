@@ -95,6 +95,11 @@ namespace GitSharp
 			}
 		}
 
+        public void ClearPath(string ext)
+        {
+            _internal_file_tree_entry.FullName.Replace(ext, string.Empty);
+        }
+
 		/// <summary>
 		/// The unix file permissions.
 		/// 
