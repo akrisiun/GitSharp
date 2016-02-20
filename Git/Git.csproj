@@ -41,12 +41,13 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\lib\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Commandlineparameters>init</Commandlineparameters>
-    <DocumentationFile>bin\Debug\git.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <NoWarn>1591</NoWarn>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>

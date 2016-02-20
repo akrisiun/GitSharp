@@ -18,3 +18,6 @@ dist
 build
 SharedAssemblyInfo.cs
 VersionAssemblyInfo.cs
+lib/git.vshost.*
+lib/*.xml
+lib/*.exe
