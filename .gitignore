@@ -21,3 +21,4 @@ VersionAssemblyInfo.cs
 lib/git.vshost.*
 lib/*.xml
 lib/*.exe
+lib/*.dll
